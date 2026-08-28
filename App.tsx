@@ -2,18 +2,24 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import ItemTarefa from "./ItemTarefa";
 
+interface Tarefa {
+  id: number;
+  descricao: string;
+  concluida: boolean;
+}
+
 export default function App() {
-  const [tarefas, setTarefas] = useState([
+  const [tarefas, setTarefas] = useState<Tarefa[]>([
     { id: 1, descricao: "Estudar ES6+", concluida: true },
     { id: 2, descricao: "Configurar ambiente Expo", concluida: true },
     { id: 3, descricao: "Entender o funcionamento do JSX", concluida: false },
     { id: 4, descricao: "Finalizar Roteiro de Pratica 02", concluida: false },
   ]);
 
-  const tarefasPendentes = tarefas.filter((tarefa) => !tarefa.concluida);
+  const tarefasPendentes: Tarefa[] = tarefas.filter((tarefa) => !tarefa.concluida);
 
-  const adicionarTarefa = () => {
-    const novaTarefa = {
+  const adicionarTarefa = (): void => {
+    const novaTarefa: Tarefa = {
       id: tarefas.length + 1,
       descricao: `Nova tarefa ${tarefas.length + 1}`,
       concluida: false,

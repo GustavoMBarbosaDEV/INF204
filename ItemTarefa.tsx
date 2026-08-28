@@ -1,7 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function ItemTarefa({ descricao, concluida }) {
+interface ItemTarefaProps {
+  descricao: string;
+  concluida: boolean;
+}
+
+export default function ItemTarefa({ descricao, concluida }: ItemTarefaProps) {
   return (
     <View style={styles.card}>
       <Text style={styles.textoTarefa}>
