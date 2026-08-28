@@ -7,12 +7,19 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  ImageSourcePropType,
 } from "react-native";
 import JogoDaVelha from "./JogoDaVelha";
 
-function CartaoPerfil({ nomeInicial, profissao, imagem }) {
-  const [nome, setNome] = useState(nomeInicial);
-  const [seguindo, setSeguindo] = useState(false);
+interface CartaoPerfilProps {
+  nomeInicial: string;
+  profissao: string;
+  imagem: ImageSourcePropType;
+}
+
+function CartaoPerfil({ nomeInicial, profissao, imagem }: CartaoPerfilProps) {
+  const [nome, setNome] = useState<string>(nomeInicial);
+  const [seguindo, setSeguindo] = useState<boolean>(false);
 
   return (
     <View style={styles.cartao}>
@@ -34,7 +41,7 @@ function CartaoPerfil({ nomeInicial, profissao, imagem }) {
         style={styles.input}
         placeholder="Alterar nome..."
         value={nome}
-        onChangeText={(texto) => setNome(texto)}
+        onChangeText={(texto: string) => setNome(texto)}
       />
     </View>
   );

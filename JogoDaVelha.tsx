@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function JogoDaVelha() {
-  const [tabuleiro, setTabuleiro] = useState(Array(9).fill(null));
-  const [jogadorAtual, setJogadorAtual] = useState("X");
+type Jogador = "X" | "O";
+type Celula = Jogador | null;
 
-  const jogar = (indice) => {
-    if (tabuleiro[indice]) return; // célula já ocupada, ignora
+export default function JogoDaVelha() {
+  const [tabuleiro, setTabuleiro] = useState<Celula[]>(Array(9).fill(null));
+  const [jogadorAtual, setJogadorAtual] = useState<Jogador>("X");
+
+  const jogar = (indice: number): void => {
+    if (tabuleiro[indice]) return;
 
     const novoTabuleiro = [...tabuleiro];
     novoTabuleiro[indice] = jogadorAtual;
@@ -14,7 +17,7 @@ export default function JogoDaVelha() {
     setJogadorAtual(jogadorAtual === "X" ? "O" : "X");
   };
 
-  const reiniciar = () => {
+  const reiniciar = (): void => {
     setTabuleiro(Array(9).fill(null));
     setJogadorAtual("X");
   };
