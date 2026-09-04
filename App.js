@@ -1,47 +1,54 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
-import ItemTarefa from "./ItemTarefa";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 
 export default function App() {
-  const [tarefas, setTarefas] = useState([
-    { id: 1, descricao: "Estudar ES6+", concluida: true },
-    { id: 2, descricao: "Configurar ambiente Expo", concluida: true },
-    { id: 3, descricao: "Entender o funcionamento do JSX", concluida: false },
-    { id: 4, descricao: "Finalizar Roteiro de Pratica 02", concluida: false },
-  ]);
+  const [contagem, setContagem] = useState(0);
 
-  const tarefasPendentes = tarefas.filter((tarefa) => !tarefa.concluida);
+  const incrementar = () => {
+    setContagem(contagem + 1);
+  };
 
-  const adicionarTarefa = () => {
-    const novaTarefa = {
-      id: tarefas.length + 1,
-      descricao: `Nova tarefa ${tarefas.length + 1}`,
-      concluida: false,
-    };
-    setTarefas([...tarefas, novaTarefa]);
+  const decrementar = () => {
+    // Impede que o contador fique negativo
+    if (contagem > 0) {
+      setContagem(contagem - 1);
+    }
+  };
+
+  const zerar = () => {
+    setContagem(0);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Lista de Tarefas</Text>
-      {tarefas.map((tarefa) => (
-        <ItemTarefa
-          key={tarefa.id}
-          descricao={tarefa.descricao}
-          concluida={tarefa.concluida}
-        />
-      ))}
+      <Text style={styles.titulo}>Contagem Atual:</Text>
+      <Text style={styles.numero}>{contagem}</Text>
 
-      <Button title="Adicionar Tarefa" onPress={adicionarTarefa} />
+      <View style={styles.linhaBotoes}>
+        <TouchableOpacity
+          style={[styles.botao, styles.botaoDecrementar]}
+          activeOpacity={0.7}
+          onPress={decrementar}
+        >
+          <Text style={styles.textoBotao}>-1</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.titulo}>Pendentes</Text>
-      {tarefasPendentes.map((tarefa) => (
-        <ItemTarefa
-          key={tarefa.id}
-          descricao={tarefa.descricao}
-          concluida={tarefa.concluida}
-        />
-      ))}
+        <TouchableOpacity
+          style={[styles.botao, styles.botaoIncrementar]}
+          activeOpacity={0.7}
+          onPress={incrementar}
+        >
+          <Text style={styles.textoBotao}>+1</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity
+        style={[styles.botao, styles.botaoZerar]}
+        activeOpacity={0.7}
+        onPress={zerar}
+      >
+        <Text style={styles.textoBotao}>Zerar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -49,14 +56,43 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    paddingTop: 50,
-    paddingHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   titulo: {
-    fontSize: 24,
+    fontSize: 20,
+    color: "#333333",
+  },
+  numero: {
+    fontSize: 48,
     fontWeight: "bold",
+    color: "#4caf50",
     marginBottom: 20,
-    color: "#20325a",
+  },
+  linhaBotoes: {
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  botao: {
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    marginHorizontal: 8,
+  },
+  botaoIncrementar: {
+    backgroundColor: "#4caf50",
+  },
+  botaoDecrementar: {
+    backgroundColor: "#e53935",
+  },
+  botaoZerar: {
+    backgroundColor: "#757575",
+    paddingHorizontal: 30,
+  },
+  textoBotao: {
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });
