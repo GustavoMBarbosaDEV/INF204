@@ -8,23 +8,19 @@ import {
 } from "react-native";
 
 export default function UrnaEletronica() {
+  const [votosA, setVotosA] = useState<number>(0);
+  const [votosB, setVotosB] = useState<number>(0);
+  const [votosC, setVotosC] = useState<number>(0);
+  const [nomeMesario, setNomeMesario] = useState<string>("");
 
-  const [votosA, setVotosA] = useState(0);
-  const [votosB, setVotosB] = useState(0);
-  const [votosC, setVotosC] = useState(0);
+  const totalVotos: number = votosA + votosB + votosC;
 
-
-  const [nomeMesario, setNomeMesario] = useState("");
-
-
-  const totalVotos = votosA + votosB + votosC;
-
-  const calcularPorcentagem = (votos) => {
+  const calcularPorcentagem = (votos: number): string => {
     if (totalVotos === 0) return "0.0";
     return ((votos / totalVotos) * 100).toFixed(1);
   };
 
-  const zerarUrna = () => {
+  const zerarUrna = (): void => {
     setVotosA(0);
     setVotosB(0);
     setVotosC(0);
@@ -36,7 +32,7 @@ export default function UrnaEletronica() {
         style={styles.inputMesario}
         placeholder="Digite o nome do mesário..."
         value={nomeMesario}
-        onChangeText={(texto) => setNomeMesario(texto)}
+        onChangeText={(texto: string) => setNomeMesario(texto)}
       />
       <Text style={styles.textoMesario}>
         Mesário atual: {nomeMesario || "Não informado"}
@@ -44,46 +40,42 @@ export default function UrnaEletronica() {
 
       <Text style={styles.titulo}>Painel de Votação</Text>
 
-      {/* Candidato A */}
       <View style={styles.candidatoContainer}>
         <Text style={styles.nomeCandidato}>
           Candidato A: {votosA} votos ({calcularPorcentagem(votosA)}%)
         </Text>
         <TouchableOpacity
           style={styles.botaoVotar}
-          onPress={() => setVotosA((prev) => prev + 1)}
+          onPress={() => setVotosA((prev: number) => prev + 1)}
         >
           <Text style={styles.textoBotao}>Votar em A</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Candidato B */}
       <View style={styles.candidatoContainer}>
         <Text style={styles.nomeCandidato}>
           Candidato B: {votosB} votos ({calcularPorcentagem(votosB)}%)
         </Text>
         <TouchableOpacity
           style={styles.botaoVotar}
-          onPress={() => setVotosB((prev) => prev + 1)}
+          onPress={() => setVotosB((prev: number) => prev + 1)}
         >
           <Text style={styles.textoBotao}>Votar em B</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Candidato C */}
       <View style={styles.candidatoContainer}>
         <Text style={styles.nomeCandidato}>
           Candidato C: {votosC} votos ({calcularPorcentagem(votosC)}%)
         </Text>
         <TouchableOpacity
           style={styles.botaoVotar}
-          onPress={() => setVotosC((prev) => prev + 1)}
+          onPress={() => setVotosC((prev: number) => prev + 1)}
         >
           <Text style={styles.textoBotao}>Votar em C</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Rodapé com total e botão de reset */}
       <View style={styles.rodape}>
         <Text style={styles.totalTexto}>Total de Votos: {totalVotos}</Text>
         <TouchableOpacity style={styles.botaoZerar} onPress={zerarUrna}>
