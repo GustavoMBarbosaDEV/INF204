@@ -1,47 +1,95 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
-import ItemTarefa from "./ItemTarefa";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
-export default function App() {
-  const [tarefas, setTarefas] = useState([
-    { id: 1, descricao: "Estudar ES6+", concluida: true },
-    { id: 2, descricao: "Configurar ambiente Expo", concluida: true },
-    { id: 3, descricao: "Entender o funcionamento do JSX", concluida: false },
-    { id: 4, descricao: "Finalizar Roteiro de Pratica 02", concluida: false },
-  ]);
+export default function UrnaEletronica() {
 
-  const tarefasPendentes = tarefas.filter((tarefa) => !tarefa.concluida);
+  const [votosA, setVotosA] = useState(0);
+  const [votosB, setVotosB] = useState(0);
+  const [votosC, setVotosC] = useState(0);
 
-  const adicionarTarefa = () => {
-    const novaTarefa = {
-      id: tarefas.length + 1,
-      descricao: `Nova tarefa ${tarefas.length + 1}`,
-      concluida: false,
-    };
-    setTarefas([...tarefas, novaTarefa]);
+
+  const [nomeMesario, setNomeMesario] = useState("");
+
+
+  const totalVotos = votosA + votosB + votosC;
+
+  const calcularPorcentagem = (votos) => {
+    if (totalVotos === 0) return "0.0";
+    return ((votos / totalVotos) * 100).toFixed(1);
+  };
+
+  const zerarUrna = () => {
+    setVotosA(0);
+    setVotosB(0);
+    setVotosC(0);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Lista de Tarefas</Text>
-      {tarefas.map((tarefa) => (
-        <ItemTarefa
-          key={tarefa.id}
-          descricao={tarefa.descricao}
-          concluida={tarefa.concluida}
-        />
-      ))}
+      <TextInput
+        style={styles.inputMesario}
+        placeholder="Digite o nome do mesário..."
+        value={nomeMesario}
+        onChangeText={(texto) => setNomeMesario(texto)}
+      />
+      <Text style={styles.textoMesario}>
+        Mesário atual: {nomeMesario || "Não informado"}
+      </Text>
 
-      <Button title="Adicionar Tarefa" onPress={adicionarTarefa} />
+      <Text style={styles.titulo}>Painel de Votação</Text>
 
-      <Text style={styles.titulo}>Pendentes</Text>
-      {tarefasPendentes.map((tarefa) => (
-        <ItemTarefa
-          key={tarefa.id}
-          descricao={tarefa.descricao}
-          concluida={tarefa.concluida}
-        />
-      ))}
+      {/* Candidato A */}
+      <View style={styles.candidatoContainer}>
+        <Text style={styles.nomeCandidato}>
+          Candidato A: {votosA} votos ({calcularPorcentagem(votosA)}%)
+        </Text>
+        <TouchableOpacity
+          style={styles.botaoVotar}
+          onPress={() => setVotosA((prev) => prev + 1)}
+        >
+          <Text style={styles.textoBotao}>Votar em A</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Candidato B */}
+      <View style={styles.candidatoContainer}>
+        <Text style={styles.nomeCandidato}>
+          Candidato B: {votosB} votos ({calcularPorcentagem(votosB)}%)
+        </Text>
+        <TouchableOpacity
+          style={styles.botaoVotar}
+          onPress={() => setVotosB((prev) => prev + 1)}
+        >
+          <Text style={styles.textoBotao}>Votar em B</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Candidato C */}
+      <View style={styles.candidatoContainer}>
+        <Text style={styles.nomeCandidato}>
+          Candidato C: {votosC} votos ({calcularPorcentagem(votosC)}%)
+        </Text>
+        <TouchableOpacity
+          style={styles.botaoVotar}
+          onPress={() => setVotosC((prev) => prev + 1)}
+        >
+          <Text style={styles.textoBotao}>Votar em C</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Rodapé com total e botão de reset */}
+      <View style={styles.rodape}>
+        <Text style={styles.totalTexto}>Total de Votos: {totalVotos}</Text>
+        <TouchableOpacity style={styles.botaoZerar} onPress={zerarUrna}>
+          <Text style={styles.textoBotao}>Zerar Urna</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -49,14 +97,57 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    paddingTop: 50,
-    paddingHorizontal: 20,
+    backgroundColor: "#F5F5F5",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
   titulo: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
-    color: "#20325a",
+    marginBottom: 30,
+    color: "#14325A",
   },
+  inputMesario: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#CCC",
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: "#FFF",
+    marginBottom: 8,
+  },
+  textoMesario: {
+    fontSize: 14,
+    color: "#505050",
+    marginBottom: 20,
+  },
+  candidatoContainer: {
+    width: "100%",
+    backgroundColor: "#FFF",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignItems: "center",
+    elevation: 2,
+  },
+  nomeCandidato: { fontSize: 18, marginBottom: 10 },
+  botaoVotar: {
+    backgroundColor: "#0064A0",
+    padding: 10,
+    borderRadius: 5,
+    width: "80%",
+    alignItems: "center",
+  },
+  textoBotao: { color: "#FFF", fontWeight: "bold" },
+  rodape: {
+    marginTop: 30,
+    alignItems: "center",
+    width: "100%",
+    borderTopWidth: 1,
+    borderColor: "#CCC",
+    paddingTop: 20,
+  },
+  totalTexto: { fontSize: 20, fontWeight: "bold", marginBottom: 15 },
+  botaoZerar: { backgroundColor: "#808080", padding: 15, borderRadius: 5 },
 });
