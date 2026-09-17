@@ -7,8 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-// Array estático fora do componente para não ser recriado a cada render
-const contatosIniciais = [
+interface Contato {
+  id: string;
+  nome: string;
+  telefone: string;
+}
+
+
+const contatosIniciais: Contato[] = [
   { id: "1", nome: "Alice Silva", telefone: "(31) 99999-1111" },
   { id: "2", nome: "Bruno Costa", telefone: "(31) 98888-2222" },
   { id: "3", nome: "Carlos Souza", telefone: "(31) 97777-3333" },
@@ -27,25 +33,27 @@ const contatosIniciais = [
 ];
 
 export default function Agenda() {
-  const [contatos, setContatos] = useState(contatosIniciais);
-  const [carregando, setCarregando] = useState(false);
+  const [contatos, setContatos] = useState<Contato[]>(contatosIniciais);
+  const [carregando, setCarregando] = useState<boolean>(false);
 
-  const renderizarContato = ({ item }) => (
+  const renderizarContato = ({ item }: { item: Contato }) => (
     <View style={styles.cardContato}>
       <Text style={styles.nomeText}>{item.nome}</Text>
       <Text style={styles.telefoneText}>{item.telefone}</Text>
     </View>
   );
 
-  const renderizarSeparador = () => <View style={styles.separador} />;
+  const renderizarSeparador = (): React.ReactElement => (
+    <View style={styles.separador} />
+  );
 
-  const renderizarVazio = () => (
+  const renderizarVazio = (): React.ReactElement => (
     <View style={styles.containerVazio}>
       <Text style={styles.textoVazio}>Agenda Vazia.</Text>
     </View>
   );
 
-  const aoAtualizar = () => {
+  const aoAtualizar = (): void => {
     setCarregando(true);
     setTimeout(() => {
       setContatos(contatosIniciais);
@@ -53,10 +61,9 @@ export default function Agenda() {
     }, 2000);
   };
 
-  // Desafio: Rolagem Infinita
-  const adicionarMaisContatos = () => {
+  const adicionarMaisContatos = (): void => {
     const proximoId = contatos.length + 1;
-    const novosContatos = [
+    const novosContatos: Contato[] = [
       {
         id: String(proximoId),
         nome: `Contato Extra ${proximoId}`,
@@ -104,7 +111,7 @@ export default function Agenda() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F5F5F5", paddingTop: 50 },
+  container: { flex: 1, backgroundColor: "#000000", paddingTop: 50 },
   cabecalho: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -112,13 +119,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 15,
   },
-  titulo: { fontSize: 24, fontWeight: "bold", color: "#14325A" },
+  titulo: { fontSize: 24, fontWeight: "bold", color: "#54c9ff" },
   botaoLimpar: { backgroundColor: "#D32F2F", padding: 10, borderRadius: 8 },
-  textoBotao: { color: "#FFF", fontWeight: "bold" },
-  cardContato: { padding: 20, backgroundColor: "#FFF" },
-  nomeText: { fontSize: 18, fontWeight: "bold", color: "#333" },
-  telefoneText: { fontSize: 16, color: "#666", marginTop: 5 },
+  textoBotao: { color: "#ffffff", fontWeight: "bold" },
+  cardContato: { padding: 20, backgroundColor: "#282929" },
+  nomeText: { fontSize: 18, fontWeight: "bold", color: "#ffffff" },
+  telefoneText: { fontSize: 16, color: "#fdfcfc", marginTop: 5 },
   separador: { height: 1, backgroundColor: "#E0E0E0" },
   containerVazio: { alignItems: "center", marginTop: 50 },
-  textoVazio: { fontSize: 18, color: "#808080", fontStyle: "italic" },
+  textoVazio: { fontSize: 18, color: "#db0c0c", fontStyle: "italic" },
 });
