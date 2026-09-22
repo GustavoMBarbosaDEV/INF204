@@ -13,7 +13,6 @@ interface Contato {
   telefone: string;
 }
 
-
 const contatosIniciais: Contato[] = [
   { id: "1", nome: "Alice Silva", telefone: "(31) 99999-1111" },
   { id: "2", nome: "Bruno Costa", telefone: "(31) 98888-2222" },
@@ -49,7 +48,15 @@ export default function Agenda() {
 
   const renderizarVazio = (): React.ReactElement => (
     <View style={styles.containerVazio}>
-      <Text style={styles.textoVazio}>Agenda Vazia.</Text>
+      <View style={styles.caixaVazia}>
+        <Text style={styles.textoVazio}>Agenda Vazia.</Text>
+        <TouchableOpacity
+          style={styles.botaoAdicionarPrimeiro}
+          onPress={() => setContatos(contatosIniciais)}
+        >
+          <Text style={styles.textoBotao}>Adicionar Primeiro Contato</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -62,6 +69,9 @@ export default function Agenda() {
   };
 
   const adicionarMaisContatos = (): void => {
+    
+    if (contatos.length === 0) return;
+
     const proximoId = contatos.length + 1;
     const novosContatos: Contato[] = [
       {
@@ -126,6 +136,34 @@ const styles = StyleSheet.create({
   nomeText: { fontSize: 18, fontWeight: "bold", color: "#ffffff" },
   telefoneText: { fontSize: 16, color: "#fdfcfc", marginTop: 5 },
   separador: { height: 1, backgroundColor: "#E0E0E0" },
-  containerVazio: { alignItems: "center", marginTop: 50 },
-  textoVazio: { fontSize: 18, color: "#db0c0c", fontStyle: "italic" },
+  containerVazio: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 30,
+    marginTop: 50,
+  },
+  caixaVazia: {
+    backgroundColor: "#b9b9b9",
+    padding: 30,
+    borderRadius: 15,
+    alignItems: "center",
+    width: "100%",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  textoVazio: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#df0505",
+    marginBottom: 20,
+  },
+  botaoAdicionarPrimeiro: {
+    backgroundColor: "#0064A0",
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+  },
 });
