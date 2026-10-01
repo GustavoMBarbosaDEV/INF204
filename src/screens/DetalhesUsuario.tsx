@@ -1,7 +1,11 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../routes/types";
 
-export default function DetalhesUsuario({ route, navigation }) {
+type Props = NativeStackScreenProps<RootStackParamList, "Detalhes">;
+
+export default function DetalhesUsuario({ route, navigation }: Props) {
   const { nomeUsuario } = route.params;
 
   return (

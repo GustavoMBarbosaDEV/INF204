@@ -1,7 +1,16 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { RootStackParamList, TabParamList } from "../routes/types";
 
-export default function Home({ navigation }) {
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList, "Incio">,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
+export default function Home({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Tela Inicial</Text>

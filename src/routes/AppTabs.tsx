@@ -3,8 +3,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import Home from "../screens/Home";
 import Configuracoes from "../screens/Configuracoes";
+import { TabParamList } from "./types";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function AppTabs() {
   return (
@@ -13,8 +14,7 @@ export default function AppTabs() {
         tabBarActiveTintColor: "#0064A0",
         tabBarInactiveTintColor: "#A0A0A0",
         tabBarIcon: ({ color, size }) => {
-          let iconName =
-            route.name === "Incio" ? "home" : "settings-outline";
+          const iconName = route.name === "Incio" ? "home" : "settings-outline";
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}

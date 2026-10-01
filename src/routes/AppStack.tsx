@@ -2,13 +2,13 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppTabs from "./AppTabs";
 import DetalhesUsuario from "../screens/DetalhesUsuario";
+import { RootStackParamList } from "./types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppStack() {
   return (
     <Stack.Navigator>
-      {/* Escondemos o header da Stack para não duplicar com o header das Tabs */}
       <Stack.Screen
         name="Principal"
         component={AppTabs}
