@@ -4,6 +4,7 @@
   "main": "index.js",
   "dependencies": {
     "@expo/metro-runtime": "^57.0.14",
+    "axios": "^1.21.0",
     "expo": "^57.0.17",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
