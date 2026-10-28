@@ -9,23 +9,26 @@ import {
 } from "react-native";
 import api from "./src/services/api";
 import FormularioUsuario from "./src/screens/FormularioUsuario";
+import { Usuario } from "./src/types/Usuario";
+
+type Tela = "lista" | "formulario";
 
 export default function App() {
-  const [tela, setTela] = useState("lista");
-  const [usuarios, setUsuarios] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [atualizando, setAtualizando] = useState(false);
-  const [erro, setErro] = useState(null);
+  const [tela, setTela] = useState<Tela>("lista");
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [atualizando, setAtualizando] = useState<boolean>(false);
+  const [erro, setErro] = useState<string | null>(null);
 
-  // A função que faz o pedido fica fora do useEffect para ser reaproveitada no refresh
-  const buscarDados = async () => {
+  const buscarDados = async (): Promise<void> => {
     try {
       setErro(null);
       // Os dados devolvidos ficam na propriedade "data" do Axios
-      const resposta = await api.get("/users");
+      const resposta = await api.get<Usuario[]>("/users");
       setUsuarios(resposta.data);
     } catch (e) {
-      console.error("Erro ao buscar dados:", e.message);
+      const mensagem = e instanceof Error ? e.message : "Erro desconhecido";
+      console.error("Erro ao buscar dados:", mensagem);
       setErro("Não foi possível carregar os usuários.");
     } finally {
       // Oculta o indicador de carregamento, independentemente de erro ou sucesso
@@ -38,8 +41,7 @@ export default function App() {
     buscarDados();
   }, []);
 
-  // Desafio: Pull-to-Refresh
-  const aoAtualizar = async () => {
+  const aoAtualizar = async (): Promise<void> => {
     setAtualizando(true);
     await buscarDados();
     setAtualizando(false);
@@ -49,7 +51,6 @@ export default function App() {
     return <FormularioUsuario onVoltar={() => setTela("lista")} />;
   }
 
-  // Feedback visual enquanto o estado é "pending"
   if (loading) {
     return (
       <View style={styles.centro}>

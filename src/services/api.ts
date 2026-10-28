@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Instância configurada com a base da API
 const api = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
   timeout: 10000,

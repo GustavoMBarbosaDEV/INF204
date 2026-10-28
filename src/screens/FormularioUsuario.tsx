@@ -10,9 +10,14 @@ import {
   ActivityIndicator,
 } from "react-native";
 import api from "../services/api";
+import { Usuario } from "../types/Usuario";
+
+interface FormularioUsuarioProps {
+  onVoltar: () => void;
+}
 
 // Alert.alert não aparece na web, então usamos window.alert nesse caso
-function avisar(titulo, mensagem) {
+function avisar(titulo: string, mensagem: string): void {
   if (Platform.OS === "web") {
     window.alert(`${titulo}\n\n${mensagem}`);
   } else {
@@ -20,12 +25,12 @@ function avisar(titulo, mensagem) {
   }
 }
 
-export default function FormularioUsuario({ onVoltar }) {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [enviando, setEnviando] = useState(false);
+export default function FormularioUsuario({ onVoltar }: FormularioUsuarioProps) {
+  const [nome, setNome] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [enviando, setEnviando] = useState<boolean>(false);
 
-  const enviar = async () => {
+  const enviar = async (): Promise<void> => {
     if (!nome.trim() || !email.trim()) {
       avisar("Atenção", "Preencha o nome e o e-mail.");
       return;
@@ -33,13 +38,18 @@ export default function FormularioUsuario({ onVoltar }) {
 
     setEnviando(true);
     try {
-      // O segundo parâmetro do post() é o corpo (payload) em JSON
-      const resposta = await api.post("/users", { name: nome, email: email });
+      // O tipo genérico diz o formato esperado da resposta
+      const resposta = await api.post<Usuario>("/users", {
+        name: nome,
+        email: email,
+      });
       avisar("Sucesso", `Usuário criado! ID retornado: ${resposta.data.id}`);
       setNome("");
       setEmail("");
     } catch (erro) {
-      avisar("Erro", `Não foi possível criar o usuário: ${erro.message}`);
+      // No catch, o erro chega como "unknown": precisamos verificar o tipo
+      const mensagem = erro instanceof Error ? erro.message : "Erro desconhecido";
+      avisar("Erro", `Não foi possível criar o usuário: ${mensagem}`);
     } finally {
       setEnviando(false);
     }
