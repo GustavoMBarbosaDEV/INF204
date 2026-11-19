@@ -8,12 +8,29 @@ import {
   FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import {
+  SQLiteProvider,
+  useSQLiteContext,
+  type SQLiteDatabase,
+} from "expo-sqlite";
+
+// Formato de uma linha da tabela tarefas
+interface Tarefa {
+  id: number;
+  descricao: string;
+  concluida: number; // SQLite nao tem booleano: 0 = pendente, 1 = concluida
+}
+
+// Formato do objeto guardado no AsyncStorage
+interface Usuario {
+  nome: string;
+  logado: boolean;
+}
 
 const CHAVE_USUARIO = "@AppTarefas:Usuario";
 
 // Funcao de inicializacao das tabelas no disco
-const iniciarBanco = async (db) => {
+const iniciarBanco = async (db: SQLiteDatabase): Promise<void> => {
   await db.execAsync("PRAGMA journal_mode = WAL;");
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS tarefas (
@@ -38,10 +55,12 @@ function EcraPrincipal() {
   // Acesso a instancia do banco de dados relacional
   const db = useSQLiteContext();
 
-  // Usuario guardado como objeto (serializado em JSON no AsyncStorage)
-  const [usuario, setUsuario] = useState({ nome: "Visitante", logado: true });
-  const [tarefas, setTarefas] = useState([]);
-  const [novaTarefa, setNovaTarefa] = useState("");
+  const [usuario, setUsuario] = useState<Usuario>({
+    nome: "Visitante",
+    logado: true,
+  });
+  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+  const [novaTarefa, setNovaTarefa] = useState<string>("");
 
   // Efeito para carregar dados assim que o ecra abrir
   useEffect(() => {
@@ -50,18 +69,18 @@ function EcraPrincipal() {
   }, []);
 
   // Leitura Assincrona Chave-Valor
-  const carregarPreferencias = async () => {
+  const carregarPreferencias = async (): Promise<void> => {
     try {
       const usuarioSalvo = await AsyncStorage.getItem(CHAVE_USUARIO);
-      if (usuarioSalvo) setUsuario(JSON.parse(usuarioSalvo));
+      if (usuarioSalvo) setUsuario(JSON.parse(usuarioSalvo) as Usuario);
     } catch (erro) {
       console.error("Falha ao ler preferencias", erro);
     }
   };
 
   // Gravacao Assincrona Chave-Valor
-  const salvarNome = async () => {
-    const novoUsuario = { nome: "Estudante INF204", logado: true };
+  const salvarNome = async (): Promise<void> => {
+    const novoUsuario: Usuario = { nome: "Estudante INF204", logado: true };
     try {
       await AsyncStorage.setItem(CHAVE_USUARIO, JSON.stringify(novoUsuario));
       setUsuario(novoUsuario);
@@ -70,10 +89,10 @@ function EcraPrincipal() {
     }
   };
 
-  // Leitura SQL (SELECT)
-  const carregarTarefas = async () => {
+  // Leitura SQL (SELECT) tipada com a interface Tarefa
+  const carregarTarefas = async (): Promise<void> => {
     try {
-      const resultados = await db.getAllAsync(
+      const resultados = await db.getAllAsync<Tarefa>(
         "SELECT * FROM tarefas ORDER BY id DESC;"
       );
       setTarefas(resultados);
@@ -83,7 +102,7 @@ function EcraPrincipal() {
   };
 
   // Insercao SQL com Bindings de Seguranca (INSERT)
-  const adicionarTarefa = async () => {
+  const adicionarTarefa = async (): Promise<void> => {
     if (novaTarefa.trim() === "") return;
 
     try {
@@ -99,7 +118,10 @@ function EcraPrincipal() {
   };
 
   // Atualizacao SQL (UPDATE)
-  const alternarStatus = async (id, statusAtual) => {
+  const alternarStatus = async (
+    id: number,
+    statusAtual: number
+  ): Promise<void> => {
     const novoStatus = statusAtual === 1 ? 0 : 1;
     try {
       await db.runAsync("UPDATE tarefas SET concluida = ? WHERE id = ?;", [
@@ -113,7 +135,7 @@ function EcraPrincipal() {
   };
 
   // Exclusao SQL (DELETE)
-  const excluirTarefa = async (id) => {
+  const excluirTarefa = async (id: number): Promise<void> => {
     try {
       await db.runAsync("DELETE FROM tarefas WHERE id = ?;", [id]);
       carregarTarefas();
