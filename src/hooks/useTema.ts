@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { TemaContext } from "../contexts/TemaContext";
+import { TemaContext, TemaContextData } from "../contexts/TemaContext";
 
-export function useTema() {
+export function useTema(): TemaContextData {
   const context = useContext(TemaContext);
 
   if (!context) {

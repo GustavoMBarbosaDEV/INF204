@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext, AuthContextData } from "../contexts/AuthContext";
 
-export function useAuth() {
+export function useAuth(): AuthContextData {
   const context = useContext(AuthContext);
 
   if (!context) {

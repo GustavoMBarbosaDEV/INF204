@@ -5,7 +5,13 @@ import { View, Text, Button, ActivityIndicator } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { useTema } from "../hooks/useTema";
 
-const Stack = createNativeStackNavigator();
+// Rotas existentes e os parametros que cada uma recebe
+export type RootStackParamList = {
+  Login: undefined;
+  Dashboard: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // --- TELAS SIMULADAS ---
 function TelaLogin() {
